@@ -6,7 +6,14 @@
 #
 
 LOCAL_PATH := device/symphony/z60plus
-# A/B
+
+# Enable project quotas and casefolding for emulated storage without sdcardfs - 
+# SDCard replacement functionality
+$(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
+
+# Dynamic Partitions stuff
+PRODUCT_USE_DYNAMIC_PARTITIONS := true
+
 # Boot control HAL
 PRODUCT_PACKAGES += \
     android.hardware.boot@1.0-impl \
