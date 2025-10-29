@@ -92,7 +92,7 @@ BOARD_SUPER_PARTITION_SIZE := 5872025600
 #BOARD_ROOT_EXTRA_FOLDERS := carrier data_mirror debug_ramdisk efs linkerconfig metadata oem optics postinstall prism spu system_ext vendor_dlkm
 
 # Recovery
-TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
+TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 TW_INCLUDE_NTFS_3G := true
@@ -124,7 +124,6 @@ PLATFORM_VERSION := 16.1.0
 
 # TWRP Configuration
 TW_THEME := portrait_hdpi
-#TW_FORCE_USE_THEME := true
 TW_EXTRA_LANGUAGES := true
 TW_SCREEN_BLANK_ON_BOOT := true
 TW_INPUT_BLACKLIST := "hbtp_vm"
