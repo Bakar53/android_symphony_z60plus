@@ -18,3 +18,13 @@ PRODUCT_USE_DYNAMIC_PARTITIONS := true
 PRODUCT_PACKAGES += \
     android.hardware.boot@1.0-impl \
     android.hardware.boot@1.0-service
+
+# Recovery Debug Tools
+PRODUCT_PACKAGES += \
+    android.hardware.health@2.1-impl \
+    android.hardware.health@2.1-service \
+    libhardware \
+    libion_sprd
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/recovery/root/init.recovery.debug.rc:$(TARGET_COPY_OUT_RECOVERY)/root/init.recovery.debug.rc

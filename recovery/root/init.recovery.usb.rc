@@ -55,25 +55,6 @@ on boot
     setprop sys.usb.config none
     trigger post-boot
 
-# add adbd service
-service adbd /system/bin/adbd
-    class main
-    socket adbd stream 660 root system
-    start
-    seclabel u:r:adbd:s0
-
-# start adbd if adb desired (or on ro.debuggable)
-on property:ro.debuggable=1
-    start adbd
-
-# or start when usb config becomes adb (if present)
-on property:sys.usb.config=adb
-    start adbd
-
-# optionally force start in recovery
-on property:ro.boot.mode=recovery
-    start adbd
-
 on post-boot
     setprop sys.usb.config ${persist.sys.usb.config}
 

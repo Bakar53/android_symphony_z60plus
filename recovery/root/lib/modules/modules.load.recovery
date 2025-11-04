@@ -5,6 +5,11 @@ sprd_time_sync.ko
 sprd_time_sync_cp.ko
 clk-sprd.ko
 ums9230-clk.ko
+gpio.ko
+pinctrl.ko
+pinctrl-sprd.ko
+pinctrl-sprd-qogirl6.ko
+phy-sprd-qogirl6.ko
 spi-sprd-adi.ko
 sprd-sc27xx-spi.ko
 sc2730-regulator.ko
@@ -111,6 +116,7 @@ misc_sprd_uid.ko
 chipone_tddi.ko
 musb_hdrc.ko
 musb_sprd.ko
+usb_f_vser.ko
 agdsp_access.ko
 audio-dsp-dump.ko
 audio_mem.ko
