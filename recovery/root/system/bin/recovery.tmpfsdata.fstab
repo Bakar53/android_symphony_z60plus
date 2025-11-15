@@ -1,4 +1,0 @@
-# recovery tmpfs/data fstab - ensure recovery mounts /cache and /metadata from block devices
-
-/cache               ext4      /dev/block/by-name/cache             flags=display=cache
-/metadata            ext4      /dev/block/by-name/metadata          flags=display=metadata

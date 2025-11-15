@@ -1,9 +1,5 @@
 import /init.recovery.${ro.hardware}.rc
 #
-# fallback: import any init.recovery.*.rc that exists (some build systems support glob-style imports, but if import doesn't accept globs use the explicit list)
-import /init.recovery.usb.rc
-import /init.recovery.common.rc
-import /init.recovery.ums9230_1h10.rc
 
 on early-init
     # Set the security context of /postinstall if present.

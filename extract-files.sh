@@ -1,5 +1,3 @@
-# BACKUP REPLACE FILE
-
 #!/bin/bash
 #
 # Copyright (C) 2016 The CyanogenMod Project
@@ -11,7 +9,7 @@
 set -e
 
 DEVICE=Z60_plus
-VENDOR=symphony
+VENDOR=Symphony
 
 # Load extract_utils and do some sanity checks
 MY_DIR="${BASH_SOURCE%/*}"

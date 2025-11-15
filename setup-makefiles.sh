@@ -1,5 +1,3 @@
-# BACKUP REPLACE FILE
-
 #!/bin/bash
 #
 # Copyright (C) 2016 The CyanogenMod Project

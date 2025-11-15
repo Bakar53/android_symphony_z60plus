@@ -2,8 +2,6 @@
 ## Please include it in /init.recovery.${ro.hardware}.rc
 #
 
-#setenforce 0
-
 service healthd /system/bin/healthd -r
     critical
     seclabel u:r:healthd:s0
@@ -71,12 +69,6 @@ service vendor.mlogservice /vendor/bin/mlogservice
     user shell
     group system root
 
-service save_kmsg /system/bin/sh /system/bin/save_kmsg.sh
-    class core
-    user root
-    group root
-    oneshot
-    seclabel u:r:save_kmsg:s0
 
 service engpcclient /vendor/bin/engpc
     class cali
@@ -88,9 +80,6 @@ service gpsd /vendor/bin/gpsd
     user system
     group gps system shell inet net_raw wifi
 
-#on early-init
-#    chmod 0666 /dev/graphics/fb0
-#    chown root graphics /dev/graphics/fb0
 
 on init
     # Apply strict SELinux checking of PROT_EXEC on mmap/mprotect calls.
@@ -185,13 +174,7 @@ on post-fs-data
     chmod 0771 /data
     # We restorecon /data in case the userdata partition has been reset.
     restorecon /data
-    # mount tmpfsdata/recovery mounts (ensure /cache is mounted from block device)
-    mount_all /system/bin/recovery.tmpfsdata.fstab
-    # ensure a persistent directory for saved logs (preferred over /cache/recovery)
-    mkdir /cache 0755 root root
-    mkdir /cache/twrp 0770 system cache
-    # start kernel log saving service (capture dmesg/last_kmsg/pstore to /cache/twrp)
-    start save_kmsg
+
     mkdir /data/misc 01771 system misc
     #mkdir /data/misc/bluedroid 0770 bluetooth net_bt_stack
     mkdir /data/misc/bluetooth 0770 system system
@@ -285,11 +268,7 @@ on property:ro.bootmode=cali
     symlink /config/usb_gadget/g1/functions/vser.gs7 /config/usb_gadget/g1/configs/b.1/f1
 
     mount_all /etc/recovery.tmpfsdata.fstab
-    # ensure /cache/twrp exists for persistent log saving
-    mkdir /cache 0755 root root
-    mkdir /cache/twrp 0770 system cache
-    # start kernel log saver after recovery tmpfs/data is mounted
-    start save_kmsg
+
     mount tmpfs tmpfs /data mode=0777
     mkdir /system 0755 root root
     symlink /system_root/system /system
@@ -354,11 +333,7 @@ on property:ro.bootmode=factorytest
     setprop sys.usb.config adb,vser,gser
 
     mount_all /etc/recovery.tmpfsdata.fstab
-    # ensure /cache/twrp exists for persistent log saving
-    mkdir /cache 0755 root root
-    mkdir /cache/twrp 0770 system cache
-    # start kernel log saver after recovery tmpfs/data is mounted
-    start save_kmsg
+
     mount tmpfs tmpfs /data mode=0777
     mkdir /system 0755 root root
     symlink /system_root/system /system
