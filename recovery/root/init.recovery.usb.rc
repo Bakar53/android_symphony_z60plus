@@ -1,116 +1,182 @@
-    # Add standard gadget entries
-    mount configfs none /config
-    mkdir /config/usb_gadget/g1 0770 shell shell
-    write /config/usb_gadget/g1/idVendor 0x1782
-    write /config/usb_gadget/g1/idProduct 0x4d00
-    mkdir /config/usb_gadget/g1/strings/0x409 0770 shell shell
-    write /config/usb_gadget/g1/strings/0x409/serialnumber ${ro.serialno}
-    write /config/usb_gadget/g1/strings/0x409/manufacturer Unisoc
-    write /config/usb_gadget/g1/strings/0x409/product "Unisoc Phone"
-    mkdir /config/usb_gadget/g1/configs/b.1 0770 shell shell
-    mkdir /config/usb_gadget/g1/configs/b.1/strings/0x409 0770 shell shell
-    write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "Conf 1"
-    write /config/usb_gadget/g1/configs/b.1/MaxPower 120
 
-    # Create adb+ffs gadget function
-    mkdir /config/usb_gadget/g1/functions/ffs.adb 0770 shell shell
-    mkdir /config/usb_gadget/g1/functions/ffs.fastboot 0770 shell shell
-    mkdir /dev/usb-ffs 0770 shell shell
-    mkdir /dev/usb-ffs/adb 0770 shell shell
-    mount functionfs adb /dev/usb-ffs/adb uid=2000,gid=2000
-    mkdir /dev/usb-ffs/fastboot 0770 system system
-    mount functionfs fastboot /dev/usb-ffs/fastboot rmode=0770,fmode=0660,uid=1000,gid=1000
 
-    # Create MTP and PTP functions
-    mkdir /config/usb_gadget/g1/functions/mtp.gs0 0770 shell shell
-    mkdir /config/usb_gadget/g1/functions/ptp.gs1 0770 shell shell
-    mkdir /config/usb_gadget/g1/functions/rndis.gs4 0770 shell shell
-    mkdir /config/usb_gadget/g1/functions/vser.gs7 0770 shell shell
-    mkdir /config/usb_gadget/g1/functions/accessory.gs2 0770 shell shell
-    mkdir /config/usb_gadget/g1/functions/audio_source.gs3 0770 shell shell
-    mkdir /config/usb_gadget/g1/functions/midi.gs5 0770 shell shell
-    mkdir /config/usb_gadget/g1/functions/gser.gs0 0770 shell shell
-    mkdir /config/usb_gadget/g1/functions/gser.gs1 0770 shell shell
-    mkdir /config/usb_gadget/g1/functions/gser.gs2 0770 shell shell
-    mkdir /config/usb_gadget/g1/functions/gser.gs3 0770 shell shell
-    mkdir /config/usb_gadget/g1/functions/gser.gs4 0770 shell shell
-    mkdir /config/usb_gadget/g1/functions/gser.gs5 0770 shell shell
-    mkdir /config/usb_gadget/g1/functions/gser.gs6 0770 shell shell
-    mkdir /config/usb_gadget/g1/functions/gser.gs7 0770 shell shell
+# TWRP recovery USB config for Unisoc UMS9230 / T616 (Symphony Z60 Plus)
+# Advanced configfs gadget for recovery environment.
+# Goals:
+# - Use configfs gadget (not legacy android_usb)
+# - Provide FunctionFS adb + optional mass_storage (userdata) + optional rndis
+# - Ensure strict order: disable UDC -> configure -> enable UDC
+# - Gate `adbd` start on `sys.usb.ffs.ready`
+# - Allow TWRP overrides: `twrp.usb.lun`, `twrp.usb.mass_storage=0|1`.
+# - Provide helpful comments and safe defaults mirroring stock behaviour.
 
-on property:sys.usb.configfs=1 && property:sys.usb.ffs.ready=1 && property:sys.usb.config=adb,vser,gser
-    write /config/usb_gadget/g1/idVendor 0x1782
-    write /config/usb_gadget/g1/idProduct 0x5d06
-    write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "adb_vser_gser"
-    rm /config/usb_gadget/g1/configs/b.1/f1
-    rm /config/usb_gadget/g1/configs/b.1/f2
-    rm /config/usb_gadget/g1/configs/b.1/f3
-    rm /config/usb_gadget/g1/configs/b.1/f4
-    rm /config/usb_gadget/g1/configs/b.1/f5
-    rm /config/usb_gadget/g1/configs/b.1/f6
-    rm /config/usb_gadget/g1/configs/b.1/f7
-    rm /config/usb_gadget/g1/configs/b.1/f8
-    rm /config/usb_gadget/g1/configs/b.1/f9
-    rm /config/usb_gadget/g1/configs/b.1/f10
-    rm /config/usb_gadget/g1/configs/b.1/f11
+on init
+	# Mount configfs and create base gadget
+	mount configfs none /config
+	mkdir /config/usb_gadget/g1 0770 shell shell
 
-    symlink /config/usb_gadget/g1/functions/ffs.adb  /config/usb_gadget/g1/configs/b.1/f1
-    symlink /config/usb_gadget/g1/functions/vser.gs7 /config/usb_gadget/g1/configs/b.1/f2
-    symlink /config/usb_gadget/g1/functions/gser.gs0 /config/usb_gadget/g1/configs/b.1/f3
+	# Default VID/PID. Stock rc will overwrite these per-mode when needed.
+	# Use Unisoc-like defaults seen in stock files; recovery may change them via writes.
+	write /config/usb_gadget/g1/idVendor 0x1782
+	write /config/usb_gadget/g1/idProduct 0x5d34
 
-    write /config/usb_gadget/g1/UDC ${sys.usb.controller}
-    setprop sys.usb.state ${sys.usb.config}
+	mkdir /config/usb_gadget/g1/strings/0x409 0770 shell shell
+	write /config/usb_gadget/g1/strings/0x409/serialnumber ${ro.serialno}
+	write /config/usb_gadget/g1/strings/0x409/manufacturer "Unisoc"
+	write /config/usb_gadget/g1/strings/0x409/product "Symphony Z60 Plus Recovery"
 
-on property:sys.usb.configfs=1 && property:sys.usb.config=vser
-    write /config/usb_gadget/g1/idVendor 0x1782
-    write /config/usb_gadget/g1/idProduct 0x4d00
-    write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "vser"
-    rm /config/usb_gadget/g1/configs/b.1/f1
-    rm /config/usb_gadget/g1/configs/b.1/f2
-    rm /config/usb_gadget/g1/configs/b.1/f3
-    rm /config/usb_gadget/g1/configs/b.1/f4
-    rm /config/usb_gadget/g1/configs/b.1/f5
-    rm /config/usb_gadget/g1/configs/b.1/f6
-    rm /config/usb_gadget/g1/configs/b.1/f7
-    rm /config/usb_gadget/g1/configs/b.1/f8
-    rm /config/usb_gadget/g1/configs/b.1/f9
-    rm /config/usb_gadget/g1/configs/b.1/f10
-    rm /config/usb_gadget/g1/configs/b.1/f11
+	mkdir /config/usb_gadget/g1/configs/b.1 0770 shell shell
+	mkdir /config/usb_gadget/g1/configs/b.1/strings/0x409 0770 shell shell
+	write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "TWRP USB"
+	write /config/usb_gadget/g1/configs/b.1/MaxPower 500
+	write /config/usb_gadget/g1/configs/b.1/bmAttributes 0xc0
 
-    symlink /config/usb_gadget/g1/functions/vser.gs7 /config/usb_gadget/g1/configs/b.1/f1
+	# Create FunctionFS adb and mass_storage functions up-front.
+	# `rndis` will be created on-demand to avoid unnecessary module usage.
+	mkdir /config/usb_gadget/g1/functions/ffs.adb 0770 shell shell
+	mkdir /config/usb_gadget/g1/functions/mass_storage.gs6 0770 shell shell
 
-    write /config/usb_gadget/g1/UDC ${sys.usb.controller}
-    setprop sys.usb.state ${sys.usb.config}
+	# Prepare FunctionFS mountpoints for adb and a spare mount for other ffs functions
+	mkdir /dev/usb-ffs 0775 shell shell
+	mkdir /dev/usb-ffs/adb 0770 shell shell
+	mount functionfs adb /dev/usb-ffs/adb uid=2000,gid=2000 ||
+		write /dev/kmsg "[init.recovery.usb] mount functionfs adb failed"
 
-on property:sys.usb.config=mtp
-    write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "mtp"
-    rm /config/usb_gadget/g1/configs/b.1/f1
-    rm /config/usb_gadget/g1/configs/b.1/f2
-    rm /config/usb_gadget/g1/configs/b.1/f3
-    rm /config/usb_gadget/g1/configs/b.1/f4
-    rm /config/usb_gadget/g1/configs/b.1/f5
-    write /config/usb_gadget/g1/idVendor 0x18d1
-    write /config/usb_gadget/g1/idProduct 0xd001
-    symlink /config/usb_gadget/g1/functions/mtp.gs0 /config/usb_gadget/g1/configs/b.1/f1
-    write /config/usb_gadget/g1/UDC ${sys.usb.controller}
-    setprop sys.usb.state ${sys.usb.config}
+	# advertise that configfs is available for property-driven config switching
+	setprop sys.usb.configfs 1
 
-on property:sys.usb.config=mtp,adb
-    start adbd
+	# By default keep USB disabled until recovery explicitly sets `sys.usb.config`
+	setprop sys.usb.config none
 
-on property:sys.usb.ffs.ready=1 && property:sys.usb.config=mtp,adb
-    write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "mtp_adb"
-    rm /config/usb_gadget/g1/configs/b.1/f1
-    rm /config/usb_gadget/g1/configs/b.1/f2
-    rm /config/usb_gadget/g1/configs/b.1/f3
-    rm /config/usb_gadget/g1/configs/b.1/f4
-    rm /config/usb_gadget/g1/configs/b.1/f5
-    write /config/usb_gadget/g1/idVendor 0x18d1
-    write /config/usb_gadget/g1/idProduct 0xd001
-    symlink /config/usb_gadget/g1/functions/mtp.gs0 /config/usb_gadget/g1/configs/b.1/f1
-    symlink /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f2
-    write /config/usb_gadget/g1/UDC ${sys.usb.controller}
-    setprop sys.usb.state ${sys.usb.config}
+	# Allow TWRP to opt-out of mass_storage by property (default enabled)
+	setprop twrp.usb.mass_storage 1
 
-on property:ro.boot.usbcontroller=*
-setprop sys.usb.controller ${ro.boot.usbcontroller}
+	# Default LUN target. TWRP can override via `setprop twrp.usb.lun <path>`.
+	setprop twrp.usb.lun /dev/block/by-name/userdata
+
+# ----------------------- Common actions -----------------------
+# Unbind and cleanup when config set to none
+on property:sys.usb.config=none && property:sys.usb.configfs=1
+	write /config/usb_gadget/g1/UDC "none"
+	stop adbd
+	setprop sys.usb.ffs.ready 0
+	# Reset descriptors to safe defaults
+	write /config/usb_gadget/g1/bDeviceClass 0
+	rm /config/usb_gadget/g1/configs/b.1/f1 || true
+	rm /config/usb_gadget/g1/configs/b.1/f2 || true
+	rm /config/usb_gadget/g1/configs/b.1/f3 || true
+	setprop sys.usb.state ${sys.usb.config}
+
+# Start adbd when adb config is active and FunctionFS is ready
+on property:sys.usb.ffs.ready=1 && property:sys.usb.config=adb && property:sys.usb.configfs=1
+	start adbd
+
+# Stop adbd if FunctionFS becomes unavailable
+on property:init.svc.adbd=stopped
+	setprop sys.usb.ffs.ready 0
+
+# ----------------------- ADB only -----------------------
+on property:sys.usb.config=adb && property:sys.usb.configfs=1
+	# Ensure UDC is cleared before reconfiguration
+	write /config/usb_gadget/g1/UDC "none"
+	rm /config/usb_gadget/g1/configs/b.1/f1 || true
+	rm /config/usb_gadget/g1/configs/b.1/f2 || true
+	rm /config/usb_gadget/g1/configs/b.1/f3 || true
+	symlink /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f1
+	write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "adb"
+	# try to bind UDC; some kernels need controller present via sys.usb.controller
+	write /config/usb_gadget/g1/UDC ${sys.usb.controller}
+	setprop sys.usb.state ${sys.usb.config}
+
+# ----------------------- Mass storage (+ adb) -----------------------
+# Default LUN uses property `twrp.usb.lun`. If `twrp.usb.mass_storage` is 0,
+# mass_storage actions will be ignored.
+on property:sys.usb.config=mass_storage,adb && property:sys.usb.configfs=1
+	stop adbd
+	# honor explicit twrp flag
+	ifeq ${twrp.usb.mass_storage} 0
+		write /dev/kmsg "[init.recovery.usb] mass_storage disabled by twrp.usb.mass_storage"
+		setprop sys.usb.state mass_storage,adb
+		write /config/usb_gadget/g1/UDC ${sys.usb.controller}
+		trigger post-massstorage
+		return
+	end
+	# Configure mass_storage LUN using override or fallback
+	write /config/usb_gadget/g1/functions/mass_storage.gs6/lun.0/file ${twrp.usb.lun}
+	write /config/usb_gadget/g1/functions/mass_storage.gs6/lun.0/cdrom 0
+	write /config/usb_gadget/g1/functions/mass_storage.gs6/lun.0/ro 0
+	rm /config/usb_gadget/g1/configs/b.1/f1 || true
+	rm /config/usb_gadget/g1/configs/b.1/f2 || true
+	rm /config/usb_gadget/g1/configs/b.1/f3 || true
+	symlink /config/usb_gadget/g1/functions/mass_storage.gs6 /config/usb_gadget/g1/configs/b.1/f1
+	symlink /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f2
+	write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "mass_storage_adb"
+	write /config/usb_gadget/g1/UDC ${sys.usb.controller}
+	setprop sys.usb.state ${sys.usb.config}
+
+on property:sys.usb.ffs.ready=1 && property:sys.usb.config=mass_storage,adb && property:sys.usb.configfs=1
+	start adbd
+
+# Simple mass_storage without adb
+on property:sys.usb.config=mass_storage && property:sys.usb.configfs=1
+	stop adbd
+	write /config/usb_gadget/g1/functions/mass_storage.gs6/lun.0/file ${twrp.usb.lun}
+	write /config/usb_gadget/g1/functions/mass_storage.gs6/lun.0/cdrom 0
+	write /config/usb_gadget/g1/functions/mass_storage.gs6/lun.0/ro 0
+	rm /config/usb_gadget/g1/configs/b.1/f1 || true
+	symlink /config/usb_gadget/g1/functions/mass_storage.gs6 /config/usb_gadget/g1/configs/b.1/f1
+	write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "mass_storage"
+	write /config/usb_gadget/g1/UDC ${sys.usb.controller}
+	setprop sys.usb.state ${sys.usb.config}
+
+# ----------------------- RNDIS (optional) -----------------------
+on property:sys.usb.config=rndis,adb && property:sys.usb.configfs=1
+	stop adbd
+	# Create rndis function when requested (safe to call repeatedly)
+	mkdir /config/usb_gadget/g1/functions/rndis.gs4 0770 shell shell || true
+	rm /config/usb_gadget/g1/configs/b.1/f1 || true
+	rm /config/usb_gadget/g1/configs/b.1/f2 || true
+	rm /config/usb_gadget/g1/configs/b.1/f3 || true
+	symlink /config/usb_gadget/g1/functions/rndis.gs4 /config/usb_gadget/g1/configs/b.1/f1
+	symlink /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f2
+	write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "rndis_adb"
+	write /sys/module/usb_f_rndis/parameters/rndis_dl_max_pkt_per_xfer 10 || true
+	write /config/usb_gadget/g1/UDC ${sys.usb.controller}
+	setprop sys.usb.state ${sys.usb.config}
+
+on property:sys.usb.ffs.ready=1 && property:sys.usb.config=rndis,adb && property:sys.usb.configfs=1
+	start adbd
+
+# ----------------------- Helpers and fallbacks -----------------------
+# Allow user to set a custom LUN path from TWRP shell:
+#   setprop twrp.usb.lun /dev/block/your_lun
+on property:twrp.usb.lun=*
+	write /dev/kmsg "[init.recovery.usb] twrp.usb.lun changed: ${twrp.usb.lun}"
+
+# Allow disabling mass_storage from recovery UI or shell:
+#   setprop twrp.usb.mass_storage 0
+on property:twrp.usb.mass_storage=0
+	write /dev/kmsg "[init.recovery.usb] mass_storage disabled via twrp.usb.mass_storage"
+
+# Rebind UDC whenever controller property appears/changes. Some kernels
+# set `sys.usb.controller` late; attempt to bind gadget when it becomes available.
+on property:sys.usb.controller=*
+	write /dev/kmsg "[init.recovery.usb] sys.usb.controller=${sys.usb.controller}"
+	# Re-apply current configuration by writing UDC again (idempotent on many kernels)
+	write /config/usb_gadget/g1/UDC ${sys.usb.controller} || true
+
+# Offer a lightweight optional detect service: if your recovery image includes
+# `/sbin/twrp-usb-detect` it can probe partitions and set `twrp.usb.lun` automatically.
+service twrp-usb-detect /sbin/twrp-usb-detect
+	class late_start
+	user root
+	group root
+	disabled
+
+on property:ro.twrp.detect_userdata=1
+	start twrp-usb-detect
+
+# Final state debug property
+on property:sys.usb.state=*
+	write /dev/kmsg "[init.recovery.usb] usb.state=${sys.usb.state} config=${sys.usb.config} controller=${sys.usb.controller} ffs=${sys.usb.ffs.ready}"
+
