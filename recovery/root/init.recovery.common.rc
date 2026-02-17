@@ -84,6 +84,9 @@ service gpsd /vendor/bin/gpsd
 on init
     # Apply strict SELinux checking of PROT_EXEC on mmap/mprotect calls.
     write /sys/fs/selinux/checkreqprot 0
+    # Keep SELinux permissive in recovery to avoid blocking recovery services
+    # and property writes (some devices flip to enforcing too early).
+    write /sys/fs/selinux/enforce 0
     start healthd
     start create_splloader_dual_slot_byname_path
 

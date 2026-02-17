@@ -1,15 +1,18 @@
-service keystore_cli_v2 /system/bin/keystore_cli_v2
+service keystore_cli /system/bin/keystore_cli_v2
     oneshot
     user system
     group root
     disabled
     seclabel u:r:recovery:s0
 
-service keystore2 /system/bin/keystore2 /tmp/misc/keystore2
-    user root
-    group root drmrpc readproc log
-    disabled
-    seclabel u:r:recovery:s0
+# keystore2 is provided by system/vendor init; duplicate definitions cause
+# instability (duplicate service definitions, crashes). Use the system's
+# keystore2 service instead of defining it here.
+# service keystore /system/bin/keystore2 /tmp/misc/keystore
+#     user root
+#     group root drmrpc readproc log
+#     disabled
+#     seclabel u:r:recovery:s0
 
 #service name must be < 16
 service vendor.rpmbproxy /vendor/bin/sprdstorageproxyd -f rpmb -d /dev/trusty-ipc-dev0 -p /data/vendor/sprd_ss -r /dev/mmcblk0rpmb
@@ -23,6 +26,28 @@ service vendor.nsproxy /vendor/bin/sprdstorageproxyd -f ns -d /dev/trusty-ipc-de
     group system
     seclabel u:r:tee:s0
 
+# Start RPMB daemon used by keymaster/TEE
+service rpmbserver /vendor/bin/rpmbserver
+    class core
+    user root
+    group root
+    disabled
+    oneshot
+
+# TEE RPC helper (if the vendor uses it)
+service tee_rpc /vendor/bin/tee_rpc
+    class core
+    user root
+    group root
+    disabled
+
+# Keymaster / keymint service (use exact vendor binary/service name)
+service keymasterd /vendor/bin/hw/android.hardware.security.keymint@1.0-unisoc.service
+    class main
+    user keymaster
+    group keymaster
+    oneshot
+
 on property:ro.crypto.state=encrypted && property:ro.crypto.type=file
     install_keyring
 
@@ -32,15 +57,20 @@ on property:vendor.sprd.storageproxyd.enabled=1
     start vendor.nsproxy
 
 on property:hwservicemanager.ready=true
+    # vendor.gatekeeper may have SELinux label issues in recovery; skip
+    # starting it to avoid incorrect-label failures. Re-enable if needed.
     start vendor.gatekeeper-1-0
-    start vendor.unisoc.keymaster-4-1
+    # Start the correct vendor keymint/keymaster service (name in
+    # vendor init is 'vendor.unisoc.keymint-1-0'). This provides the
+    # keymaster functionality used for decryption.
+    start vendor.unisoc.keymint-1-0
     setprop vendor.sprd.storageproxyd.enabled 1
 
-on property:ro.crypto.state=unsupported
-    stop vendor.unisoc.keymaster-4-1
-    stop vendor.gatekeeper-1-0
-    stop servicemanager
-    stop hwservicemanager
+#on property:ro.crypto.state=unsupported
+#    stop vendor.unisoc.keymaster-4-1
+#    stop vendor.gatekeeper-1-0
+#    stop servicemanager
+#    stop hwservicemanager
 
 on property:ro.crypto.state=unencrypted
     stop vendor.unisoc.keymaster-4-1
