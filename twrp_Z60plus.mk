@@ -26,6 +26,9 @@ $(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
 # Inherit some common twrp stuff.
 $(call inherit-product-if-exists, vendor/twrp/config/common.mk)
 
+# Inherit any OrangeFox-specific settings
+$(call inherit-product-if-exists, device/Symphony/Z60plus/ofrp_Z60plus.mk)
+
 # Inherit some common pb stuff.
 $(call inherit-product-if-exists, vendor/pb/config/common.mk)
 
