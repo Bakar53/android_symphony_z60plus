@@ -2,3 +2,5 @@ service vendor.unisoc.keymint-1-0 /vendor/bin/hw/android.hardware.security.keymi
     class early_hal
     user system
     group system drmrpc
+    seclabel u:r:recovery:s0
+    
