@@ -62,11 +62,8 @@ libkeymaster4support \
 libkeymaster_messages \
 android.hardware.keymaster@4.0 \
 android.hardware.keymaster@4.1 \
-vendor.mediatek.hardware.keymaster_attestation@1.0 \
-vendor.mediatek.hardware.keymaster_attestation@1.1 \
 android.hardware.gatekeeper@1.0-impl \
 gatekeeper.default \
-kmsetkey.beanpod \
 libSoftGatekeeper
 
 # Keystore2
