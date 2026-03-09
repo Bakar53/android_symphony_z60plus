@@ -115,10 +115,10 @@ BOARD_VENDOR_DLKMIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := f2fs
 
 # Workaround for error copying vendor files to recovery ramdisk
-#TARGET_COPY_OUT_VENDOR := vendor
-#TARGET_COPY_OUT_VENDOR_DLKM := vendor_dlkm
-#TARGET_COPY_OUT_PRODUCT := product
-#TARGET_COPY_OUT_SYSTEM_EXT := system_ext
+TARGET_COPY_OUT_VENDOR := vendor
+TARGET_COPY_OUT_VENDOR_DLKM := vendor_dlkm
+TARGET_COPY_OUT_PRODUCT := product
+TARGET_COPY_OUT_SYSTEM_EXT := system_ext
 
 #SUPER
 BOARD_SUPER_PARTITION_SIZE := 5872025600
@@ -202,8 +202,8 @@ TW_USE_TOOLBOX := true
 TW_USE_EXTERNAL_STORAGE := true
 #TW_USE_NEW_MINADBD := true
 #TW_EXCLUDE_DEFAULT_USB_INIT := true
-#TW_HAS_MTP := true
-#TW_EXCLUDE_MTP := false
+TW_HAS_MTP := true
+TW_EXCLUDE_MTP := false
 TW_MTP_DEVICE := /dev/mtp_usb
 #TW_NO_BIND_SYSTEM := true
 #TW_SCREEN_BLANK_ON_BOOT := true
@@ -240,7 +240,7 @@ TWRP_INCLUDE_LOGCAT := true
 TARGET_USES_LOGD := true
 
 # Kernel module
-TW_LOAD_VENDOR_MODULES := "incrementalfs.ko kheaders.ko trace_irqsoff_bytedancy.ko trace_noschedule_bytedancy.ko trace_runqlat_bytedancy.ko"
+#TW_LOAD_VENDOR_MODULES := "incrementalfs.ko kheaders.ko trace_irqsoff_bytedancy.ko trace_noschedule_bytedancy.ko trace_runqlat_bytedancy.ko"
 
 
 #Modules 
