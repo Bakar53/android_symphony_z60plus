@@ -1,7 +1,6 @@
-Starting TWRP 3.7.1_12-bhs-5c3d206a-dirty on Fri Mar 13 14:14:09 2026
- (pid 316)
+Starting OrangeFox Recovery R11.3 [default, core: R11.3] (built on Thu Mar 12 10:48:55 2026 for Z60plus [dev_ver: 2026-01-02 (0ee6f8e8)]; pid 312)
 RECOVERY_SDCARD_ON_DATA := true
-I:Lun file '/config/usb_gadget/g1/functions/mass_storage.gs6/lun.0/file'
+TW_NO_USB_STORAGE := true
 TW_INCLUDE_FASTBOOTD := true
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
 TW_INCLUDE_CRYPTO := true
@@ -26,24 +25,29 @@ I:Unhandled flag: 'avb=vbmeta_system'
 I:Unhandled flag: 'avb_keys=/avb/q-gsi.avbpubkey:/avb/r-gsi.avbpubkey:/avb/s-gsi.avbpubkey'
 I:Trying to prepare system from super partition
 I:Symlinking /dev/block/dm-0 => /dev/block/bootdevice/by-name/system 
+I:Symlinking /dev/block/dm-0 => /dev/block/by-name/system 
 I:Found an additional entry for '/system'
 I:Processing '/system'
 I:Processing '/system_ext'
 I:Unhandled flag: 'avb=vbmeta_system_ext'
 I:Trying to prepare system_ext from super partition
 I:Symlinking /dev/block/dm-1 => /dev/block/bootdevice/by-name/system_ext 
+I:Symlinking /dev/block/dm-1 => /dev/block/by-name/system_ext 
 I:Processing '/vendor'
 I:Unhandled flag: 'avb=vbmeta_vendor'
 I:Trying to prepare vendor from super partition
 I:Symlinking /dev/block/dm-2 => /dev/block/bootdevice/by-name/vendor 
+I:Symlinking /dev/block/dm-2 => /dev/block/by-name/vendor 
 I:Processing '/product'
 I:Unhandled flag: 'avb=vbmeta_product'
 I:Trying to prepare product from super partition
 I:Symlinking /dev/block/dm-3 => /dev/block/bootdevice/by-name/product 
+I:Symlinking /dev/block/dm-3 => /dev/block/by-name/product 
 I:Processing '/vendor_dlkm'
 I:Unhandled flag: 'avb=vbmeta_vendor'
 I:Trying to prepare vendor_dlkm from super partition
 I:Symlinking /dev/block/dm-4 => /dev/block/bootdevice/by-name/vendor_dlkm 
+I:Symlinking /dev/block/dm-4 => /dev/block/by-name/vendor_dlkm 
 I:Processing '/metadata'
 I:Processing '/data'
 I:Unhandled flag: 'latemount'
@@ -88,9 +92,8 @@ I:Separate manifest doesn't exist for 'android.hardware.keymaster'
 I:/vendor/etc/vintf/manifest_ums9230.xml not found. Using default path for manifest.xml
 I:PageManager::LoadFileToBuffer loading filename: '/vendor/etc/vintf/manifest.xml' directly
 I:Looking for 'android.hardware.keymaster' service in manifest
-I:Keymaster_Ver::Unable to find vendor manifest on the device, and no default value set. Checking the ramdisk manifest
-I:Property ro.boot.product.vendor.sku not found, trying to get vintf manifest file name from ro.board.platform
-I:Keymaster_Ver::Using keymaster version '' for decryption
+I:Keymaster_Ver::Unable to find vendor manifest on the device. Setting to default value.
+I:Keymaster_Ver::Using keymaster version '4.0' for decryption
 Starting the UI...
 Skipping adf graphics -- not present in build tree
 setting DRM_FORMAT_XBGR8888 and GGL_PIXEL_FORMAT_RGBA_8888
@@ -127,5 +130,6 @@ I:unable to open zip archive /system_root/system/apex/com.android.art.release.ap
 I:Skipping non-existent apex file: /system_root/system/apex/com.android.art.release.apex
 I:unable to open zip archive /system_root/system/apex/com.android.media.swcodec.apex. Reason: No such file or directory
 I:Skipping non-existent apex file: /system_root/system/apex/com.android.media.swcodec.apex
-I:Backup folder set to '/data/media/TWRP/BACKUPS/Z60plusBD2309059028'
+I:Backup folder set to '/data/media/Fox/BACKUPS/Z60plusBD2309059028'
+I:Settings storage is '/data/media'
 Using additional fstab for decryption /etc/additional.fstab 

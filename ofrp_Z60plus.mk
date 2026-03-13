@@ -35,7 +35,7 @@ OF_UNBIND_SDCARD_F2FS := 1
 OF_QUICK_BACKUP_LIST := /boot;/data;/system_image;/vendor_image;
 
 # keymaster
-OF_DEFAULT_KEYMASTER_VERSION := 4.0
+OF_DEFAULT_KEYMASTER_VERSION := 4.1
 
 # patch avb20 - some ROM recoveries try to overwrite custom recoveries
 #OF_PATCH_AVB20 := 1
