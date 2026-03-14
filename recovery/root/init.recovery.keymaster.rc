@@ -1,0 +1,16 @@
+service vendor.keymaster /vendor/bin/hw/android.hardware.security.keymint@1.0-unisoc.service
+    class hal
+    user root
+    group root
+    oneshot
+
+service vendor.gatekeeper /vendor/bin/hw/android.hardware.gatekeeper@1.0-service.trusty
+    class hal
+    user root
+    group root
+    oneshot
+
+on boot
+    # start vendor HAL services directly so hwservicemanager finds them
+    start vendor.keymaster
+    start vendor.gatekeeper
