@@ -2,3 +2,4 @@ service vendor.sprd.hardware.trusty@1.0-service /vendor/bin/hw/vendor.sprd.hardw
     class hal
     user system
     group system
+    seclabel u:r:recovery:s0
