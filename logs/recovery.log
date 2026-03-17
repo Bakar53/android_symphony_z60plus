@@ -1,5 +1,5 @@
-Starting TWRP 3.7.1_12-bhs-5c3d206a-dirty on Sat Mar 14 21:49:46 2026
- (pid 316)
+Starting TWRP 3.7.1_12-bhs-5c3d206a-dirty on Tue Mar 17 19:18:33 2026
+ (pid 313)
 RECOVERY_SDCARD_ON_DATA := true
 I:Lun file '/config/usb_gadget/g1/functions/mass_storage.gs6/lun.0/file'
 TW_INCLUDE_FASTBOOTD := true
@@ -68,6 +68,9 @@ I:Processing '/vbmeta_system_ext'
 I:Processing '/vbmeta_vendor'
 I:Processing '/vendor_boot'
 I:Processing '/vendor_image'
+I:Deleting property 'ro.crypto.dm_default_key.options_format.version'
+I:Deleting property 'ro.crypto.volume.metadata.method'
+I:Deleting property 'ro.crypto.volume.options'
 I:Setting 'external_storage.casefold.enabled' to '1' from /vendor/build.prop
 I:Setting 'external_storage.sdcardfs.enabled' to '0' from /vendor/build.prop
 I:GetFstabPath: /odm/etc/fstab.ums9230_1h10
