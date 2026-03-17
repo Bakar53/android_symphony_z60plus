@@ -1,5 +1,5 @@
-Starting TWRP 3.7.1_12-bhs-5c3d206a-dirty on Tue Mar 17 19:18:33 2026
- (pid 313)
+Starting TWRP 3.7.1_12-bhs-5c3d206a-dirty on Tue Mar 17 20:29:09 2026
+ (pid 312)
 RECOVERY_SDCARD_ON_DATA := true
 I:Lun file '/config/usb_gadget/g1/functions/mass_storage.gs6/lun.0/file'
 TW_INCLUDE_FASTBOOTD := true
@@ -93,6 +93,10 @@ I:PageManager::LoadFileToBuffer loading filename: '/vendor/etc/vintf/manifest.xm
 I:Looking for 'android.hardware.keymaster' service in manifest
 I:Keymaster_Ver::Unable to find vendor manifest on the device, and no default value set. Checking the ramdisk manifest
 I:Property ro.boot.product.vendor.sku not found, trying to get vintf manifest file name from ro.board.platform
+I:Separate manifest doesn't exist for 'android.hardware.keymaster'
+I:/vendor/etc/vintf/manifest_ums9230.xml not found. Using default path for manifest.xml
+I:PageManager::LoadFileToBuffer loading filename: '/vendor/etc/vintf/manifest.xml' directly
+I:Looking for 'android.hardware.keymaster' service in manifest
 I:Keymaster_Ver::Using keymaster version '' for decryption
 Starting the UI...
 Skipping adf graphics -- not present in build tree
