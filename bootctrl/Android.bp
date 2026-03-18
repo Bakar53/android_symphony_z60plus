@@ -1,0 +1,27 @@
+cc_library_shared {
+    name: "android.hardware.boot@1.2-unisocimpl",
+    stem: "android.hardware.boot@1.0-impl-1.2-unisocimpl",
+    defaults: [
+        "hidl_defaults",
+        "libboot_control_vendor",
+    ],
+    relative_install_path: "hw",
+    vendor: true,
+    recovery_available: true,
+    srcs: ["BootControl.cpp"],
+
+    shared_libs: [
+        "liblog",
+        "libhidlbase",
+        "libhardware",
+        "libutils",
+        "android.hardware.boot@1.0",
+        "android.hardware.boot@1.1",
+        "android.hardware.boot@1.2",
+        "vendor.sprd.hardware.boot@1.2",
+    ],
+    static_libs: [
+        "libboot_control_cpp",
+        "libfstab",
+    ],
+}
