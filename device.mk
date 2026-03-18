@@ -32,15 +32,15 @@ ENABLE_VIRTUAL_AB := true
 
 # Define A/B partitions so recovery knows what to slot-switch
 AB_OTA_PARTITIONS += \
-boot \
-vendor_boot \
-vbmeta \
-vbmeta_system \
-vbmeta_vendor \
-system \
-system_ext \
-product \
-vendor 
+    boot \
+    vendor_boot \
+    vbmeta \
+    vbmeta_system \
+    vbmeta_vendor \
+    system \
+    system_ext \
+    product \
+    vendor 
 
 # Configure emulated_storage.mk (Required for /sdcard)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
@@ -50,26 +50,25 @@ PRODUCT_PROPERTY_OVERRIDES += persist.sys.fuse.passthrough.enable=true
 
 # Minimal Boot Control HAL (Essential for A/B switching)
 PRODUCT_PACKAGES += \
-libgptutils \
-checkpoint_gc \
-create_pl_dev.recovery
+    libgptutils \
+    checkpoint_gc \
+    create_pl_dev.recovery
 
 # Essential Crypto/FBE support 
 PRODUCT_PACKAGES += \
-libkeymaster4 \
-libkeymaster41 \
-libkeymaster4support \
-libkeymaster_messages \
-android.hardware.keymaster@4.0 \
-android.hardware.keymaster@4.1 \
-android.hardware.gatekeeper@1.0-impl \
-gatekeeper.default \
-libSoftGatekeeper
+    android.hardware.keymaster@4.0.vendor \
+    android.hardware.keymaster@4.1 \
+    android.hardware.gatekeeper@1.0-impl
+
+# Keymint
+PRODUCT_PACKAGES += \
+    android.hardware.security.keymint \
+    android.hardware.security.secureclock \
+    android.hardware.security.sharedsecret \
 
 # Keystore2
 PRODUCT_PACKAGES += \
     android.system.keystore2 \
-
 
 # Dynamic Partitions stuff
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
@@ -99,11 +98,11 @@ AB_OTA_POSTINSTALL_CONFIG += \
     FILESYSTEM_TYPE_vendor=ext4 \
     POSTINSTALL_OPTIONAL_vendor=true    
 
-
 # Boot control HAL
 PRODUCT_PACKAGES += \
-    android.hardware.boot@1.0-impl \
-    android.hardware.boot@1.0-service
+    android.hardware.boot@1.2-unisocimpl \
+    android.hardware.boot@1.2-unisocimpl.recovery \
+    android.hardware.boot@1.2-service
 
 # Recovery Debug Tools
 PRODUCT_PACKAGES += \
@@ -114,6 +113,8 @@ PRODUCT_PACKAGES += \
 
 # bootctrl HAL    
 PRODUCT_PACKAGES += \
+    bootctrl \
+    bootctrl.recovery \
     bootctrl.default \
     bootctrl.unisoc \
     bootctrl.ums9230.recovery
