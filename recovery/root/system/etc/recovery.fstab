@@ -38,10 +38,16 @@
 /dev/block/by-name/misc          /misc                emmc     defaults                           defaults
 /dev/block/by-name/persist       /persist             emmc     defaults                           defaults
 /dev/block/mapper/system_a       /system              erofs    ro                                 wait,logical,slotselect,avb=vbmeta_system,avb_keys=/avb/q-gsi.avbpubkey:/avb/r-gsi.avbpubkey:/avb/s-gsi.avbpubkey      
+/dev/block/mapper/system_b       /system              erofs    ro                                 wait,logical,slotselect,avb=vbmeta_system,avb_keys=/avb/q-gsi.avbpubkey:/avb/r-gsi.avbpubkey:/avb/s-gsi.avbpubkey      
 /dev/block/mapper/system_a       /system              ext4     ro,barrier=1                       wait,logical,slotselect,avb=vbmeta_system,avb_keys=/avb/q-gsi.avbpubkey:/avb/r-gsi.avbpubkey:/avb/s-gsi.avbpubkey      
+/dev/block/mapper/system_b       /system              ext4     ro,barrier=1                       wait,logical,slotselect,avb=vbmeta_system,avb_keys=/avb/q-gsi.avbpubkey:/avb/r-gsi.avbpubkey:/avb/s-gsi.avbpubkey      
 /dev/block/mapper/system_ext_a   /system_ext          erofs    ro                                 wait,logical,slotselect,avb=vbmeta_system_ext
+/dev/block/mapper/system_ext_b   /system_ext          erofs    ro                                 wait,logical,slotselect,avb=vbmeta_system_ext
 /dev/block/mapper/vendor_a       /vendor              erofs    ro                                 wait,logical,slotselect,avb=vbmeta_vendor
+/dev/block/mapper/vendor_b       /vendor              erofs    ro                                 wait,logical,slotselect,avb=vbmeta_vendor
 /dev/block/mapper/product_a      /product             erofs    ro                                 wait,logical,slotselect,avb=vbmeta_product
+/dev/block/mapper/product_b      /product             erofs    ro                                 wait,logical,slotselect,avb=vbmeta_product
 /dev/block/mapper/vendor_dlkm_a  /vendor_dlkm         ext4     noatime,ro,errors=panic            wait,logical,slotselect,avb=vbmeta_vendor
+/dev/block/mapper/vendor_dlkm_b  /vendor_dlkm         ext4     noatime,ro,errors=panic            wait,logical,slotselect,avb=vbmeta_vendor
 /dev/block/by-name/metadata      /metadata            ext4     nodev,noatime,nosuid,errors=panic  wait,formattable,check
 /dev/block/by-name/userdata      /data                f2fs     noatime,nosuid,nodev,discard,reserve_root=32768,resgid=1065,inline_xattr,inline_data,inlinecrypt,fsync_mode=nobarrier  latemount,wait,check,fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized,keydirectory=/metadata/vold/metadata_encryption,reservedsize=128M,checkpoint=fs,formattable

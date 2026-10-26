@@ -18,19 +18,20 @@ DEVICE_PATH := device/Symphony/Z60plus
 
 # A/B
 AB_OTA_UPDATER := true
+ENABLE_VIRTUAL_AB := true
 AB_OTA_PARTITIONS += \
     boot \
     dtbo \
+    init_boot \
     system \
     system_ext \
     vendor \
     product \
-    odm \
-    odm_dlkm \
     vendor_boot \
     vendor_dlkm \
     vbmeta \
     vbmeta_system \
+    vbmeta_odm \
     vbmeta_vendor \
     vbmeta_product \
     vbmeta_system_ext \
@@ -122,9 +123,9 @@ TARGET_COPY_OUT_SYSTEM_EXT := system_ext
 
 #SUPER
 BOARD_SUPER_PARTITION_SIZE := 5872025600
-BOARD_SUPER_PARTITION_GROUPS := symphony_dynamic_partitions
-BOARD_SYMPHONY_DYNAMIC_PARTITIONS_PARTITION_LIST := system system_ext vendor product vendor_dlkm
-BOARD_SYMPHONY_DYNAMIC_PARTITIONS_SIZE := 9122611200 # TODO: Fix hardcoded value
+BOARD_SUPER_PARTITION_GROUPS := group_unisoc
+BOARD_GROUP_UNISOC_SIZE := 5867831296
+BOARD_GROUP_UNISOC_PARTITION_LIST := system system_ext vendor product vendor_dlkm
 
 # System as root
 BOARD_ROOT_EXTRA_FOLDERS := carrier data_mirror debug_ramdisk efs linkerconfig metadata odm_dlkm oem optics postinstall prism second_stage_resources spu system_ext vendor_dlkm
@@ -159,19 +160,19 @@ BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
 TARGET_NO_RECOVERY := true
 
 # Crypto 
-TW_INCLUDE_CRYPTO := true
-TW_INCLUDE_CRYPTO_FBE := true
+#TW_INCLUDE_CRYPTO := true
+#TW_INCLUDE_CRYPTO_FBE := true
 BOARD_USES_METADATA_PARTITION := true
 TW_INCLUDE_FBE_METADATA_DECRYPT := true
 TW_USE_FSCRYPT_POLICY := 2
 
 # Verified Boot
-BOARD_AVB_ENABLE := true
-BOARD_AVB_RECOVERY_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
-BOARD_AVB_RECOVERY_ALGORITHM := SHA256_RSA4096
-BOARD_AVB_RECOVERY_ROLLBACK_INDEX := 1
-BOARD_AVB_RECOVERY_ROLLBACK_INDEX_LOCATION := 1
-BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
+#BOARD_AVB_ENABLE := true
+#BOARD_AVB_RECOVERY_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
+#BOARD_AVB_RECOVERY_ALGORITHM := SHA256_RSA4096
+#BOARD_AVB_RECOVERY_ROLLBACK_INDEX := 1
+#BOARD_AVB_RECOVERY_ROLLBACK_INDEX_LOCATION := 1
+#BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
 
 # Hack: prevent anti rollback
 PLATFORM_SECURITY_PATCH := 2099-12-31
